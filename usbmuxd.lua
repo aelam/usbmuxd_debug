@@ -14,9 +14,6 @@ local usbmuxd_msgtypes = {"result", "connect", "listen", "device_add", "remove",
 	local MESSAGE_PLIST = 8
 -- };
 
-
-
-
 local header_fields =
 {
     message_length = ProtoField.int32("usbmux.message_length", "message_length", base.DEC),
@@ -47,7 +44,7 @@ function usbmux_protocol.dissector(buffer, pinfo, tree)
     offset = offset + 4
     local msg_type = buffer(offset, 4):le_uint()
     local msg_type_name = usbmuxd_msgtypes[msg_type]
-    subtree:add_le(header_fields.message_type, buffer(offset, 4))
+    subtree:add_le(header_fields.message_type, buffer(offset, 4)):append_text(" [" .. msg_type_name .. "]")
     
     offset = offset + 4
     subtree:add_le(header_fields.tag, buffer(offset, 4))
